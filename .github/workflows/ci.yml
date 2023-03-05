@@ -90,8 +90,8 @@ jobs:
           sudo apt update
           DEBIAN_FRONTEND=noninteractive sudo apt install -y --no-install-recommends \
             gcc-${{ matrix.compiler-version }} g++-${{ matrix.compiler-version }}
-          update-alternatives --install /usr/bin/gcc gcc $(which gcc-${{ matrix.compiler-version }}) 100
-          update-alternatives --install /usr/bin/g++ g++ $(which g++-${{ matrix.compiler-version }}) 100
+          sudo update-alternatives --install /usr/bin/gcc gcc $(which gcc-${{ matrix.compiler-version }}) 100
+          sudo update-alternatives --install /usr/bin/g++ g++ $(which g++-${{ matrix.compiler-version }}) 100
 
       - name: Install CMake
         run: |
