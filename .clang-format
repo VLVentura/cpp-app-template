@@ -1,5 +1,4 @@
 Language: Cpp
-# BasedOnStyle: Google
 Standard: c++17
 UseTab: Never
 TabWidth: 4

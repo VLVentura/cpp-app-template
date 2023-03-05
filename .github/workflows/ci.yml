@@ -25,54 +25,42 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - compiler: gcc-9
+          - compiler: gcc
+            compiler-version: 9
+            llvm-version: 15
             config: gcc-production
             build-type: Release
-            clangtidy: false
-            cppcheck: false
-            gcovr: false
             
-          - compiler: gcc-9
-            config: gcc-developer
+          - compiler: gcc
+            compiler-version: 9
+            llvm-version: 15
             build-type: Debug
-            clangtidy: 15
-            cppcheck: true
-            gcovr: true
 
-          - compiler: gcc-9
+          - compiler: gcc
+            compiler-version: 9
+            llvm-version: 15
             config: gcc-developer_with_thread_sanitizer
             build-type: Debug
-            clangtidy: 15
-            cppcheck: true
-            gcovr: true
 
-          - compiler: llvm-15
+          - compiler: clang
+            llvm-version: 15
             config: clang-production
             build-type: Release
-            clangtidy: false
-            cppcheck: false
-            gcovr: false
 
-          - compiler: llvm-15
+          - compiler: clang
+            llvm-version: 15
             config: clang-developer
             build-type: Debug
-            clangtidy: 15
-            cppcheck: true
-            gcovr: true
 
-          - compiler: llvm-15
+          - compiler: clang
+            llvm-version: 15
             config: clang-developer_with_memory_sanitizer
             build-type: Debug
-            clangtidy: 15
-            cppcheck: true
-            gcovr: true
 
-          - compiler: llvm-15
+          - compiler: clang
+            llvm-version: 15
             config: clang-developer_with_thread_sanitizer
             build-type: Debug
-            clangtidy: 15
-            cppcheck: true
-            gcovr: true
 
     steps:
       - uses: actions/checkout@v3
@@ -80,17 +68,40 @@ jobs:
           submodules: true
 
       - name: Setup environment
-        uses: aminya/setup-cpp@v1
-        with:
-          compiler: ${{ matrix.compiler }}
-          cmake: true
-          ninja: true
-          ccache: true
-          conan: true
-          gcovr: ${{ matrix.gcovr }}
-          cppcheck: ${{ matrix.cppcheck }}
-          clangtidy: ${{ matrix.clangtidy }}
+        run: |
+          apt update
+          apt upgrade -y
+          apt install -y build-essential autoconf libtool pkg-config wget tar git ccache \
+           ninja-build cppcheck gcovr python3 python3-pip
       
+      - name: Install Llvm
+        run: |
+          bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)" -s ${{ matrix.llvm-version }} all
+          apt update
+          apt install -y clang-${{ matrix.llvm-version }} clangd-${{ matrix.llvm-version }} \
+            clang-format-${{ matrix.llvm-version }} \
+            clang-tidy-${{ matrix.llvm-version }} clang-tools-15
+
+      - name: Install GCC
+        if: ${{ matrix.compiler }} == gcc
+        run: |
+          add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          apt update
+          apt install -y gcc-${{ matrix.compiler-version }} g++-${{ matrix.compiler-version }}
+          update-alternatives --install /usr/bin/gcc gcc $(which gcc-${{ matrix.compiler-version }}) 100
+          update-alternatives --install /usr/bin/g++ g++ $(which g++-${{ matrix.compiler-version }}) 100
+
+      - name: Install CMake
+        run: |
+          bash -c "$(wget -O - https://apt.kitware.com/kitware-archive.sh)"
+          apt update
+          apt install cmake
+      
+      - name: Install Conan
+        run: |
+          python3 -m pip install --upgrade pip setuptools
+          pip install conan==1.56
+
       - name: Configure ccache
         run: |
           ccache --max-size=2G --set-config=compression=true --set-config=compression_level=5
