@@ -83,6 +83,8 @@ jobs:
             clang-${{ matrix.llvm-version }} clangd-${{ matrix.llvm-version }} \
             clang-format-${{ matrix.llvm-version }} \
             clang-tidy-${{ matrix.llvm-version }} clang-tools-${{ matrix.llvm-version }}
+          sudo update-alternatives --install /usr/bin/clang clang $(which clang-${{ matrix.llvm-version }}) 100
+          sudo update-alternatives --install /usr/bin/clang++ clang++ $(which clang++-${{ matrix.llvm-version }}) 100
 
       - name: Install GCC
         if: matrix.compiler == 'gcc'
