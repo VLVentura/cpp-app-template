@@ -34,6 +34,7 @@ jobs:
           - compiler: gcc
             compiler-version: 9
             llvm-version: 15
+            config: gcc-developer
             build-type: Debug
 
           - compiler: gcc
@@ -84,7 +85,7 @@ jobs:
             clang-tidy-${{ matrix.llvm-version }} clang-tools-${{ matrix.llvm-version }}
 
       - name: Install GCC
-        if: ${{ matrix.compiler }} == gcc
+        if: ${{ matrix.compiler }} == 'gcc'
         run: |
           sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
           sudo apt update
