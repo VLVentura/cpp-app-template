@@ -1,0 +1,126 @@
+name: CI
+on:
+  pull_request:
+  release:
+    types: [published]
+  push:
+    tags:
+    branches:
+      - main
+      - develop
+
+env:
+  # Some packages request that Conan use the system package manager to install
+  # a few dependencies. This flag allows Conan to proceed with these installations;
+  # leaving this flag undefined can cause some installation failures.
+  CONAN_SYSREQUIRES_MODE: enabled
+
+jobs:
+  Test:
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+    runs-on: ubuntu-20.04
+    
+    strategy:
+      max-parallel: 2
+      fail-fast: false
+      matrix:
+        include:
+          - compiler: gcc-9
+            config: gcc-production
+            build-type: Release
+            clangtidy: false
+            cppcheck: false
+            gcovr: false
+            
+          - compiler: gcc-9
+            config: gcc-developer
+            build-type: Debug
+            clangtidy: 15
+            cppcheck: true
+            gcovr: true
+
+          - compiler: gcc-9
+            config: gcc-developer_with_thread_sanitizer
+            build-type: Debug
+            clangtidy: 15
+            cppcheck: true
+            gcovr: true
+
+          - compiler: llvm-15
+            config: clang-production
+            build-type: Release
+            clangtidy: false
+            cppcheck: false
+            gcovr: false
+
+          - compiler: llvm-15
+            config: clang-developer
+            build-type: Debug
+            clangtidy: 15
+            cppcheck: true
+            gcovr: true
+
+          - compiler: llvm-15
+            config: clang-developer_with_memory_sanitizer
+            build-type: Debug
+            clangtidy: 15
+            cppcheck: true
+            gcovr: true
+
+          - compiler: llvm-15
+            config: clang-developer_with_thread_sanitizer
+            build-type: Debug
+            clangtidy: 15
+            cppcheck: true
+            gcovr: true
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Setup environment
+        with:
+          compiler: ${{ matrix.compiler }}
+          cmake: true
+          ninja: true
+          ccache: true
+          conan: true
+          gcovr: ${{ matrix.gcovr }}
+          cppcheck: ${{ matrix.cppcheck }}
+          clangtidy: ${{ matrix.clangtidy }}
+      
+      - name: Configure ccache
+        run: |
+          ccache --max-size=2G --set-config=compression=true --set-config=compression_level=5
+      
+      - name: Configure cache
+        id: configure-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.ccache
+            ~/.conan
+          key: ubuntu-20.04-cache
+      
+      - name: Configure conan
+        if: steps.configure-cache.outputs.cache-hit != 'true'
+        run: |
+          conan profile new default --detect
+          conan profile update settings.compiler=gcc default
+          conan profile update settings.compiler.version=9 default
+          conan profile update settings.compiler.cppstd=17 default
+          conan profile update settings.compiler.libcxx=libstdc++11 default
+
+      - name: Configure cmake
+        run: |
+          cmake --preset=${{ matrix.config }}
+      
+      - name: Build
+        run: |
+          cmake --build build/ --config ${{ matrix.build-type }} --target all -j $(nproc)
+      
+      - name: Test and code coverage
+        if: ${{ matrix.build-type }} != Release
+        run: |
+          cmake --build build/ --target CodeCoverage -j $(nproc)

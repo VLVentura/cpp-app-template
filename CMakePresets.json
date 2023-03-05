@@ -1,0 +1,141 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 16
+    },
+    "configurePresets": [
+        {
+            "name": "gcc-default",
+            "hidden": true,
+            "displayName": "GCC - Default",
+            "description": "Setup for GCC",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/build/",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++"
+            }
+        },
+        {
+            "name": "gcc-production",
+            "inherits": "gcc-default",
+            "displayName": "GCC - Production Mode",
+            "description": "Setup for GCC with developer mode disabled",
+            "cacheVariables": {
+                "ENABLE_DEVELOPER_MODE": {
+                    "type": "BOOL",
+                    "value": false
+                }
+            }
+        },
+        {
+            "name": "gcc-developer",
+            "inherits": "gcc-default",
+            "displayName": "GCC - Developer Mode",
+            "description": "Setup for GCC with developer mode enabled",
+            "cacheVariables": {
+                "ENABLE_DEVELOPER_MODE": {
+                    "type": "BOOL",
+                    "value": true
+                }
+            }
+        },
+        {
+            "name": "gcc-developer_with_thread_sanitizer",
+            "inherits": "gcc-developer",
+            "displayName": "GCC - Developer Mode with Thread Sanitizer",
+            "description": "Setup for GCC with with developer mode and thread sanitizer enabled",
+            "cacheVariables": {
+                "OPT_ENABLE_SANITIZER_THREAD": {
+                    "type": "BOOL",
+                    "value": true
+                },
+                "OPT_ENABLE_SANITIZER_ADDRESS": {
+                    "type": "BOOL",
+                    "value": false
+                },
+                "OPT_ENABLE_SANITIZER_LEAK": {
+                    "type": "BOOL",
+                    "value": false
+                }
+            }
+        },
+        {
+            "name": "clang-default",
+            "hidden": true,
+            "displayName": "Clang - Default",
+            "description": "Setup for Clang",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/build/",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++"
+            }
+        },
+        {
+            "name": "clang-production",
+            "inherits": "clang-default",
+            "displayName": "Clang - Production Mode",
+            "description": "Setup for Clang with developer mode disabled",
+            "cacheVariables": {
+                "ENABLE_DEVELOPER_MODE": {
+                    "type": "BOOL",
+                    "value": false
+                }
+            }
+        },
+        {
+            "name": "clang-developer",
+            "inherits": "clang-default",
+            "displayName": "Clang - Developer Mode",
+            "description": "Setup for Clang with developer mode enabled",
+            "cacheVariables": {
+                "ENABLE_DEVELOPER_MODE": {
+                    "type": "BOOL",
+                    "value": true
+                },
+                "OPT_ENABLE_SANITIZER_MEMORY": {
+                    "type": "BOOL",
+                    "value": false
+                }
+            }
+        },
+        {
+            "name": "clang-developer_with_memory_sanitizer",
+            "inherits": "clang-default",
+            "displayName": "Clang - Developer Mode with Memory Sanitizer",
+            "description": "Setup for Clang with developer mode and memory sanitizer enabled",
+            "cacheVariables": {
+                "ENABLE_DEVELOPER_MODE": {
+                    "type": "BOOL",
+                    "value": true
+                },
+                "OPT_ENABLE_SANITIZER_ADDRESS": {
+                    "type": "BOOL",
+                    "value": false
+                },
+                "OPT_ENABLE_SANITIZER_LEAK": {
+                    "type": "BOOL",
+                    "value": false
+                }
+            }
+        },
+        {
+            "name": "clang-developer_with_thread_sanitizer",
+            "inherits": "clang-developer_with_memory_sanitizer",
+            "displayName": "Clang - Developer Mode with Thread Sanitizer",
+            "description": "Setup for Clang with developer mode and thread sanitizer enabled",
+            "cacheVariables": {
+                "OPT_ENABLE_SANITIZER_THREAD": {
+                    "type": "BOOL",
+                    "value": true
+                },
+                "OPT_ENABLE_SANITIZER_MEMORY": {
+                    "type": "BOOL",
+                    "value": false
+                }
+            }
+        }
+    ]
+}
