@@ -77,15 +77,24 @@ jobs:
       
       - name: Install Llvm
         run: |
-          sudo apt purge -y clang*
           sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)" -s ${{ matrix.llvm-version }} all
           sudo apt update
           DEBIAN_FRONTEND=noninteractive sudo apt install -y --no-install-recommends \
-            clang-${{ matrix.llvm-version }} clangd-${{ matrix.llvm-version }} \
-            clang-format-${{ matrix.llvm-version }} \
+            clang-${{ matrix.llvm-version }} clang-format-${{ matrix.llvm-version }} \
             clang-tidy-${{ matrix.llvm-version }} clang-tools-${{ matrix.llvm-version }}
-          sudo update-alternatives --install /usr/bin/clang clang $(which clang-${{ matrix.llvm-version }}) 100
-          sudo update-alternatives --install /usr/bin/clang++ clang++ $(which clang++-${{ matrix.llvm-version }}) 100
+      
+      # Apparently, these applications are already registered in update-alternatives, just making 
+      # sure they really are.
+      - name: Setup llvm tool versions
+        run: |
+          sudo update-alternatives --install /usr/bin/clang clang $(which clang-${{ matrix.llvm-version }}) 100 &&
+            sudo update-alternatives --set clang $(which clang-${{ matrix.llvm-version }})
+          sudo update-alternatives --install /usr/bin/clang++ clang++ $(which clang++-${{ matrix.llvm-version }}) 100 &&
+            sudo update-alternatives --set clang++ $(which clang++-${{ matrix.llvm-version }})
+          sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy $(which clang-tidy-${{ matrix.llvm-version }}) 100 &&
+            sudo update-alternatives --set clang-tidy $(which clang-tidy-${{ matrix.llvm-version }})
+          sudo update-alternatives --install /usr/bin/clang-format clang-format $(which clang-format-${{ matrix.llvm-version }}) 100 &&
+            sudo update-alternatives --set clang-format $(which clang-format-${{ matrix.llvm-version }})
 
       - name: Install GCC
         if: matrix.compiler == 'gcc'
