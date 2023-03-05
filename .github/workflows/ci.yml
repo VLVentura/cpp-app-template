@@ -80,6 +80,7 @@ jobs:
           submodules: true
 
       - name: Setup environment
+        uses: aminya/setup-cpp@v1
         with:
           compiler: ${{ matrix.compiler }}
           cmake: true
