@@ -1,0 +1,26 @@
+# Docs at https://docs.conan.io/en/latest/reference/conanfile_txt.html
+
+[requires]
+fmt/9.1.0
+spdlog/1.11.0
+nlohmann_json/3.11.2
+cli11/2.3.1
+gtest/1.12.1
+abseil/20220623.0   # Local only
+grpc/1.50.0         # Local only
+protobuf/3.21.4     # Local only
+
+
+[options]
+grpc:csharp_ext=False
+grpc:csharp_plugin=False
+grpc:node_plugin=False
+grpc:objective_c_plugin=False
+grpc:php_plugin=False
+grpc:python_plugin=False
+grpc:ruby_plugin=False
+grpc:secure=True
+
+
+[generators]
+cmake_find_package

@@ -122,22 +122,22 @@ echo "tools.system.package_manager:mode = install\ntools.system.package_manager:
 Assuming that you already has vscode installed
 
 ```bash
-vscode --install-extension akiramiyakoda.cppincludeguard;
-vscode --install-extension eamodio.gitlens;
-vscode --install-extension Gruntfuggly.todo-tree;
-vscode --install-extension hars.CppSnippets;
-vscode --install-extension IBM.output-colorizer;
-vscode --install-extension jeff-hykin.better-cpp-syntax;
-vscode --install-extension llvm-vs-code-extensions.vscode-clangd;
-vscode --install-extension ms-azuretools.vscode-docker;
-vscode --install-extension ms-vscode.cmake-tools;
-vscode --install-extension streetsidesoftware.code-spell-checker;
-vscode --install-extension tdennis4496.cmantic;
-vscode --install-extension twxs.cmake;
-vscode --install-extension wayou.vscode-todo-highlight;
-vscode --install-extension xaver.clang-format;
-vscode --install-extension yzhang.markdown-all-in-one;
-vscode --install-extension zxh404.vscode-proto3
+code --install-extension akiramiyakoda.cppincludeguard;
+code --install-extension eamodio.gitlens;
+code --install-extension Gruntfuggly.todo-tree;
+code --install-extension hars.CppSnippets;
+code --install-extension IBM.output-colorizer;
+code --install-extension jeff-hykin.better-cpp-syntax;
+code --install-extension llvm-vs-code-extensions.vscode-clangd;
+code --install-extension ms-azuretools.vscode-docker;
+code --install-extension ms-vscode.cmake-tools;
+code --install-extension streetsidesoftware.code-spell-checker;
+code --install-extension tdennis4496.cmantic;
+code --install-extension twxs.cmake;
+code --install-extension wayou.vscode-todo-highlight;
+code --install-extension xaver.clang-format;
+code --install-extension yzhang.markdown-all-in-one;
+code --install-extension zxh404.vscode-proto3
 ```
 
 ## Configure and Build Process
@@ -155,42 +155,50 @@ Create a `CMakeUserPresets.json` file with the content above
     },
     "configurePresets": [
         {
-            "name": "gcc-developer_with_warnings_as_errors_disabled",
+            "name": "gcc-developer_local",
             "inherits": "gcc-developer",
-            "displayName": "GCC - Developer Mode with Warnings as Errors Disabled",
-            "description": "Setup for GCC with developer mode enabled and warnings as errors disabled",
+            "displayName": "GCC - Local Developer Mode",
+            "description": "Setup for GCC with local dependencies",
             "cacheVariables": {
-                "ENABLE_DEVELOPER_MODE": {
+                "ENABLE_LOCAL_BUILD_MODE": {
                     "type": "BOOL",
                     "value": true
-                },
-                "OPT_WARNINGS_AS_ERRORS": {
-                    "type": "BOOL",
-                    "value": false
                 }
             }
         },
         {
-            "name": "gcc-developer_with_warnings_as_errors_disabled_and_without_linters",
-            "inherits": "gcc-developer",
-            "displayName": "GCC - Developer Mode with Warnings as Errors and Linters Disabled",
-            "description": "Setup for GCC with developer mode enabled and warnings as errors disabled",
+            "name": "gcc-production_local",
+            "inherits": "gcc-production",
+            "displayName": "GCC - Local Production Mode",
+            "description": "Setup for GCC with local dependencies",
             "cacheVariables": {
-                "ENABLE_DEVELOPER_MODE": {
+                "ENABLE_LOCAL_BUILD_MODE": {
                     "type": "BOOL",
                     "value": true
-                },
-                "OPT_WARNINGS_AS_ERRORS": {
+                }
+            }
+        },
+        {
+            "name": "clang-developer_local",
+            "inherits": "clang-developer",
+            "displayName": "Clang - Local Developer Mode",
+            "description": "Setup for Clang with local dependencies",
+            "cacheVariables": {
+                "ENABLE_LOCAL_BUILD_MODE": {
                     "type": "BOOL",
-                    "value": false
-                },
-                "OPT_ENABLE_CLANG_TIDY": {
+                    "value": true
+                }
+            }
+        },
+        {
+            "name": "clang-production_local",
+            "inherits": "clang-production",
+            "displayName": "Clang - Local Production Mode",
+            "description": "Setup for Clang with local dependencies",
+            "cacheVariables": {
+                "ENABLE_LOCAL_BUILD_MODE": {
                     "type": "BOOL",
-                    "value": false
-                },
-                "OPT_ENABLE_CPPCHECK": {
-                    "type": "BOOL",
-                    "value": false
+                    "value": true
                 }
             }
         }
@@ -200,7 +208,7 @@ Create a `CMakeUserPresets.json` file with the content above
             "name": "gcc-release",
             "displayName": "GCC - Release build",
             "description": "Build for production",
-            "configurePreset": "gcc-production",
+            "configurePreset": "gcc-production_local",
             "configuration": "Release",
             "targets": "all",
             "jobs": 12
@@ -209,43 +217,11 @@ Create a `CMakeUserPresets.json` file with the content above
             "name": "gcc-debug",
             "displayName": "GCC - Debug build",
             "description": "Build for debug mode",
-            "configurePreset": "gcc-developer",
+            "configurePreset": "gcc-developer_local",
             "configuration": "Debug",
             "targets": [
-                "all"
-            ],
-            "jobs": 12
-        },
-        {
-            "name": "gcc-debug_without_warnings_as_errors",
-            "displayName": "GCC - Debug build with warnings as errors",
-            "description": "Build for debug mode",
-            "configurePreset": "gcc-developer_with_warnings_as_errors_disabled",
-            "configuration": "Debug",
-            "targets": [
-                "all"
-            ],
-            "jobs": 12
-        },
-        {
-            "name": "gcc-debug_without_warnings_as_errors_and_linters_disabled",
-            "displayName": "GCC - Debug build with warnings as errors and linters disabled",
-            "description": "Build for debug mode",
-            "configurePreset": "gcc-developer_with_warnings_as_errors_disabled_and_without_linters",
-            "configuration": "Debug",
-            "targets": [
-                "all"
-            ],
-            "jobs": 12
-        },
-        {
-            "name": "gcc-debug_with_thread_sanitizer",
-            "displayName": "GCC - Debug build with Thread Sanitizer",
-            "description": "Build for debug mode with Thread Sanitizer",
-            "configurePreset": "gcc-developer_with_thread_sanitizer",
-            "configuration": "Debug",
-            "targets": [
-                "all"
+                "all",
+                "CodeCoverage"
             ],
             "jobs": 12
         },
@@ -253,43 +229,20 @@ Create a `CMakeUserPresets.json` file with the content above
             "name": "clang-release",
             "displayName": "Clang - Release build",
             "description": "Build for production",
-            "configurePreset": "clang-production",
+            "configurePreset": "clang-production_local",
             "configuration": "Release",
-            "targets": [
-                "all"
-            ],
+            "targets": "all",
             "jobs": 12
         },
         {
             "name": "clang-debug",
-            "displayName": "Clang - Debug mode",
+            "displayName": "Clang - Debug build",
             "description": "Build for debug mode",
-            "configurePreset": "clang-developer",
+            "configurePreset": "clang-developer_local",
             "configuration": "Debug",
             "targets": [
-                "all"
-            ],
-            "jobs": 12
-        },
-        {
-            "name": "clang-debug_with_memory_sanitizer",
-            "displayName": "Clang - Debug mode with Memory Sanitizer",
-            "description": "Build for debug mode with Memory Sanitizer",
-            "configurePreset": "clang-developer_with_memory_sanitizer",
-            "configuration": "Debug",
-            "targets": [
-                "all"
-            ],
-            "jobs": 12
-        },
-        {
-            "name": "clang-debug_with_thread_sanitizer",
-            "displayName": "Clang - Debug mode with Thread Sanitizer",
-            "description": "Build for debug mode with Thread Sanitizer",
-            "configurePreset": "clang-developer_with_thread_sanitizer",
-            "configuration": "Debug",
-            "targets": [
-                "all"
+                "all",
+                "CodeCoverage"
             ],
             "jobs": 12
         }
@@ -308,7 +261,7 @@ cmake --list-presets
 2. Use one of the presets listed
 
 ```bash
-cmake --preset=gcc-developer
+cmake --preset=gcc-developer_local
 ```
 
 ### Build Project
@@ -343,8 +296,8 @@ Now that you are on a Docker container just follows the instructions on [Configu
 
 ## Copying from Docker Container
 
-After the build maybe you will need to copy to outside the container, to achieve this, run the following command:
+After the build maybe you will need to copy the executable to outside the container, to achieve this, run the following command:
 
 ```bash
-docker cp app:/app/build/app .
+docker cp app:/app/build/out/<BUILD_CONFIG>/<EXECUTABLE> .
 ```

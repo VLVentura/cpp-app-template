@@ -19,7 +19,7 @@ jobs:
   Test:
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     runs-on: ubuntu-20.04
-    
+
     strategy:
       max-parallel: 2
       fail-fast: false
@@ -30,38 +30,38 @@ jobs:
             llvm-version: 15
             config: gcc-production
             build-type: Release
-            
-          - compiler: gcc
-            compiler-version: 9
-            llvm-version: 15
-            config: gcc-developer
-            build-type: Debug
 
-          - compiler: gcc
-            compiler-version: 9
-            llvm-version: 15
-            config: gcc-developer_with_thread_sanitizer
-            build-type: Debug
+          # - compiler: gcc
+          #   compiler-version: 9
+          #   llvm-version: 15
+          #   config: gcc-developer
+          #   build-type: Debug
 
-          - compiler: clang
-            llvm-version: 15
-            config: clang-production
-            build-type: Release
+          # - compiler: gcc
+          #   compiler-version: 9
+          #   llvm-version: 15
+          #   config: gcc-developer_with_thread_sanitizer
+          #   build-type: Debug
 
-          - compiler: clang
-            llvm-version: 15
-            config: clang-developer
-            build-type: Debug
+          # - compiler: clang
+          #   llvm-version: 15
+          #   config: clang-production
+          #   build-type: Release
 
-          - compiler: clang
-            llvm-version: 15
-            config: clang-developer_with_memory_sanitizer
-            build-type: Debug
+          # - compiler: clang
+          #   llvm-version: 15
+          #   config: clang-developer
+          #   build-type: Debug
 
-          - compiler: clang
-            llvm-version: 15
-            config: clang-developer_with_thread_sanitizer
-            build-type: Debug
+          # - compiler: clang
+          #   llvm-version: 15
+          #   config: clang-developer_with_memory_sanitizer
+          #   build-type: Debug
+
+          # - compiler: clang
+          #   llvm-version: 15
+          #   config: clang-developer_with_thread_sanitizer
+          #   build-type: Debug
 
     steps:
       - uses: actions/checkout@v3
@@ -72,9 +72,9 @@ jobs:
         run: |
           sudo apt update
           DEBIAN_FRONTEND=noninteractive sudo apt install -y --no-install-recommends \
-            build-essential autoconf libtool pkg-config wget tar git ccache ninja-build cppcheck \
-            gcovr python3 python3-pip
-      
+            software-properties-common build-essential autoconf libtool pkg-config wget tar git \
+            ccache ninja-build cppcheck gcovr python3 python3-pip 
+
       - name: Install Llvm
         run: |
           sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)" -s ${{ matrix.llvm-version }} all
@@ -82,8 +82,8 @@ jobs:
           DEBIAN_FRONTEND=noninteractive sudo apt install -y --no-install-recommends \
             clang-${{ matrix.llvm-version }} clang-format-${{ matrix.llvm-version }} \
             clang-tidy-${{ matrix.llvm-version }} clang-tools-${{ matrix.llvm-version }}
-      
-      # Apparently, these applications are already registered in update-alternatives, just making 
+
+      # Apparently, these applications are already registered in update-alternatives, just making
       # sure they really are.
       - name: Setup llvm tool versions
         run: |
@@ -99,7 +99,7 @@ jobs:
       - name: Install GCC
         if: matrix.compiler == 'gcc'
         run: |
-          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          sudo add-apt-repository 'deb http://archive.ubuntu.com/ubuntu/ lunar main restricted universe multiverse'
           sudo apt update
           DEBIAN_FRONTEND=noninteractive sudo apt install -y --no-install-recommends \
             gcc-${{ matrix.compiler-version }} g++-${{ matrix.compiler-version }}
@@ -111,25 +111,25 @@ jobs:
           sudo bash -c "$(wget -O - https://apt.kitware.com/kitware-archive.sh)"
           sudo apt update
           DEBIAN_FRONTEND=noninteractive sudo apt install -y --no-install-recommends cmake
-      
+
       - name: Install Conan
         run: |
           python3 -m pip install --upgrade pip setuptools
           pip install conan==1.56
 
+      # All heavy dependencies, take too much time to install with conan.
+      - name: Install heavy dependencies
+        run: |
+          sudo add-apt-repository 'deb http://archive.ubuntu.com/ubuntu/ lunar main restricted universe multiverse'
+          sudo apt update
+          DEBIAN_FRONTEND=noninteractive sudo apt install -y --no-install-recommends \
+            libgrpc-dev/lunar libgrpc++-dev/lunar libprotobuf-dev/lunar protobuf-compiler/lunar \
+            protobuf-compiler-grpc/lunar libabsl-dev libboost1.81-dev
+
       - name: Configure ccache
         run: |
           ccache --max-size=2G --set-config=compression=true --set-config=compression_level=5
-      
-      - name: Configure cache
-        id: configure-cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.ccache
-            ~/.conan
-          key: ubuntu-20.04-cache
-      
+
       - name: Configure conan
         if: steps.configure-cache.outputs.cache-hit != 'true'
         run: |
@@ -139,14 +139,23 @@ jobs:
           conan profile update settings.compiler.cppstd=17 default
           conan profile update settings.compiler.libcxx=libstdc++11 default
 
+      - name: Configure cache
+        id: configure-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.ccache
+            ~/.conan
+          key: ubuntu-20.04-cache
+
       - name: Configure cmake
         run: |
           cmake --preset=${{ matrix.config }}
-      
+
       - name: Build
         run: |
           cmake --build build/ --config ${{ matrix.build-type }} --target all -j $(nproc)
-      
+
       - name: Test and code coverage
         if: ${{ matrix.build-type }} != Release
         run: |

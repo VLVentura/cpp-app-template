@@ -16,6 +16,7 @@ set(ENABLE_CONAN_DEFAULT OFF)
 
 # Developer mode
 option(ENABLE_DEVELOPER_MODE "Enable 'developer mode'" TRUE)
+option(ENABLE_LOCAL_BUILD_MODE "Enable 'local build mode'" TRUE)
 set(ENABLE_COVERAGE_DEVELOPER_DEFAULT ON)
 set(CMAKE_UTILITIES_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/cmake)
 

@@ -14,7 +14,11 @@
             "binaryDir": "${sourceDir}/build/",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "gcc",
-                "CMAKE_CXX_COMPILER": "g++"
+                "CMAKE_CXX_COMPILER": "g++",
+                "ENABLE_LOCAL_BUILD_MODE": {
+                    "type": "BOOL",
+                    "value": false
+                }
             }
         },
         {
@@ -70,7 +74,11 @@
             "binaryDir": "${sourceDir}/build/",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "clang",
-                "CMAKE_CXX_COMPILER": "clang++"
+                "CMAKE_CXX_COMPILER": "clang++",
+                "ENABLE_LOCAL_BUILD_MODE": {
+                    "type": "BOOL",
+                    "value": false
+                }
             }
         },
         {
