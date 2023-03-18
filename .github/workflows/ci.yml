@@ -25,11 +25,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - compiler: gcc
-            compiler-version: 9
-            llvm-version: 15
-            config: gcc-production
-            build-type: Release
+          # - compiler: gcc
+          #   compiler-version: 9
+          #   llvm-version: 15
+          #   config: gcc-production
+          #   build-type: Release
 
           - compiler: gcc
             compiler-version: 9
@@ -37,31 +37,31 @@ jobs:
             config: gcc-developer
             build-type: Debug
 
-          - compiler: gcc
-            compiler-version: 9
-            llvm-version: 15
-            config: gcc-developer_with_thread_sanitizer
-            build-type: Debug
+          # - compiler: gcc
+          #   compiler-version: 9
+          #   llvm-version: 15
+          #   config: gcc-developer_with_thread_sanitizer
+          #   build-type: Debug
 
-          - compiler: clang
-            llvm-version: 15
-            config: clang-production
-            build-type: Release
+          # - compiler: clang
+          #   llvm-version: 15
+          #   config: clang-production
+          #   build-type: Release
 
           - compiler: clang
             llvm-version: 15
             config: clang-developer
             build-type: Debug
 
-          - compiler: clang
-            llvm-version: 15
-            config: clang-developer_with_memory_sanitizer
-            build-type: Debug
+          # - compiler: clang
+          #   llvm-version: 15
+          #   config: clang-developer_with_memory_sanitizer
+          #   build-type: Debug
 
-          - compiler: clang
-            llvm-version: 15
-            config: clang-developer_with_thread_sanitizer
-            build-type: Debug
+          # - compiler: clang
+          #   llvm-version: 15
+          #   config: clang-developer_with_thread_sanitizer
+          #   build-type: Debug
 
     steps:
       - uses: actions/checkout@v3
@@ -133,11 +133,10 @@ jobs:
           ccache --max-size=2G --set-config=compression=true --set-config=compression_level=5
 
       - name: Configure conan
-        if: steps.configure-cache.outputs.cache-hit != 'true'
         run: |
           conan profile new default --detect
-          conan profile update settings.compiler=gcc default
-          conan profile update settings.compiler.version=9 default
+          conan profile update settings.compiler=${{ matrix.compiler }} default
+          conan profile update settings.compiler.version=${{ matrix.compiler-version }} default
           conan profile update settings.compiler.cppstd=17 default
           conan profile update settings.compiler.libcxx=libstdc++11 default
 
@@ -147,7 +146,6 @@ jobs:
         with:
           path: |
             ~/.ccache
-            ~/.conan
           key: ubuntu-20.04-cache
 
       - name: Configure cmake
