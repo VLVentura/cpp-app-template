@@ -31,37 +31,37 @@ jobs:
             config: gcc-production
             build-type: Release
 
-          # - compiler: gcc
-          #   compiler-version: 9
-          #   llvm-version: 15
-          #   config: gcc-developer
-          #   build-type: Debug
+          - compiler: gcc
+            compiler-version: 9
+            llvm-version: 15
+            config: gcc-developer
+            build-type: Debug
 
-          # - compiler: gcc
-          #   compiler-version: 9
-          #   llvm-version: 15
-          #   config: gcc-developer_with_thread_sanitizer
-          #   build-type: Debug
+          - compiler: gcc
+            compiler-version: 9
+            llvm-version: 15
+            config: gcc-developer_with_thread_sanitizer
+            build-type: Debug
 
-          # - compiler: clang
-          #   llvm-version: 15
-          #   config: clang-production
-          #   build-type: Release
+          - compiler: clang
+            llvm-version: 15
+            config: clang-production
+            build-type: Release
 
-          # - compiler: clang
-          #   llvm-version: 15
-          #   config: clang-developer
-          #   build-type: Debug
+          - compiler: clang
+            llvm-version: 15
+            config: clang-developer
+            build-type: Debug
 
-          # - compiler: clang
-          #   llvm-version: 15
-          #   config: clang-developer_with_memory_sanitizer
-          #   build-type: Debug
+          - compiler: clang
+            llvm-version: 15
+            config: clang-developer_with_memory_sanitizer
+            build-type: Debug
 
-          # - compiler: clang
-          #   llvm-version: 15
-          #   config: clang-developer_with_thread_sanitizer
-          #   build-type: Debug
+          - compiler: clang
+            llvm-version: 15
+            config: clang-developer_with_thread_sanitizer
+            build-type: Debug
 
     steps:
       - uses: actions/checkout@v3
