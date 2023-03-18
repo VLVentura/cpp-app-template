@@ -1,4 +1,4 @@
-find_packages(fmt spdlog nlohmann_json CLI11 Threads)
+find_packages(fmt spdlog nlohmann_json CLI11 absl Protobuf Threads)
 include_third_parties()
 
 # To find a specific library on the system that does not have CMake support:
@@ -20,7 +20,9 @@ target_link_libraries(
     main
     PRIVATE project_options
             project_warnings
-    PRIVATE fmt::fmt 
+    PRIVATE fmt::fmt
             spdlog::spdlog
+            absl::absl
+            protobuf::libprotobuf
             Threads::Threads
 )

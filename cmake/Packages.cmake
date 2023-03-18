@@ -2,12 +2,10 @@ include_guard()
 
 function(install_conan_packages)
   if (ENABLE_LOCAL_BUILD_MODE)
-    message(STATUS "Local build mode option set true, to disable it use `-DENABLE_LOCAL_BUILD_MODE:BOOL=OFF`.")
-
+    message(STATUS "Local build mode is ON, to disable it use `-DENABLE_LOCAL_BUILD_MODE:BOOL=OFF`.")
     set (CONAN_FILE conanfile.local.txt)
-  elseif()
-    message(STATUS "Local build mode option set false, to enable it use `-DENABLE_LOCAL_BUILD_MODE:BOOL=ON`.")
-    
+  else()
+    message(STATUS "Local build mode is OFF, to enable it use `-DENABLE_LOCAL_BUILD_MODE:BOOL=ON`.")
     set (CONAN_FILE conanfile.txt)
   endif()
 
