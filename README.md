@@ -20,8 +20,8 @@ Template repository for applications written in C++
     - [Build Project](#build-project)
 - [Setting up the Development Environment with Docker](#setting-up-the-development-environment-with-docker)
   - [Building Docker Image](#building-docker-image)
-  - [Executing The Image](#executing-the-image)
-  - [Building](#building)
+    - [With Docker Compose](#with-docker-compose)
+    - [Without Docker Compose](#without-docker-compose)
   - [Copying from Docker Container](#copying-from-docker-container)
 
 # Setting up the Development Environment
@@ -280,26 +280,50 @@ To create this docker image, all the steps that was described in this README wil
 
 ## Building Docker Image
 
-Execute the following command to build `app` docker image:
+### With Docker Compose
 
-```bash
-docker build -t app-image .
-```
+1. Execute the following command inside `.devcontainer` directory to build:
 
-## Executing The Image
+    ```bash
+    docker compose build
+    ```
 
-```bash
-docker run -it --name app -v $(pwd):/app app-image
-```
+2. Run the application with:
 
-## Building
+    ```bash
+    docker compose run --rm app
+    ```
 
-Now that you are on a Docker container just follows the instructions on [Configure](#configure-project) to configure the project and [Build](#build-project) to build the app.
+    `--rm` will exclude the container when it exit, if you want to exclude manually, just remove this flag.
+
+3. Delete the services
+
+    ```bash
+    docker compose down
+    ```
+
+### Without Docker Compose
+
+1. Execute the following command to build `app` docker image:
+
+    ```bash
+    docker build -t cpp-app-image -f .devcontainer/Dockerfile .
+    ```
+
+2. Start a container
+
+    ```bash
+    docker run -it --name cpp-app cpp-app-image
+    ```
+
+3. Building
+
+    Now that you are on a Docker container just follows the instructions on [Configure](#configure-project) to configure the project and [Build](#build-project) to build the app.
 
 ## Copying from Docker Container
 
-After the build maybe you will need to copy the executable to outside the container, to achieve this, run the following command:
+After the build, if you want to copy the executable to outside of the container, run the command below:
 
 ```bash
-docker cp app:/app/build/out/<BUILD_CONFIG>/<EXECUTABLE> .
+docker cp <CONTAINER_NAME or CONTAINER_ID>:/app/build/out/<BUILD_CONFIG>/bin/main .; 
 ```
