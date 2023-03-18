@@ -58,7 +58,7 @@ Use the following command to update the system and install the packages:
 ```bash
 sudo apt update;
 sudo apt upgrade -y;
-sudo apt install -y build-essential autoconf libtool pkg-config \
+sudo apt install -y software-properties-common build-essential autoconf libtool pkg-config \
      wget tar git \
      ccache ninja-build cppcheck gcovr \
      python3 python3-pip
@@ -66,17 +66,19 @@ sudo apt install -y build-essential autoconf libtool pkg-config \
 
 ### GCC
 
-To install more recent versions of GCC, you can use the following command
+The following command will install the gcc-11. Replace `11` to install another version
 
 ```bash
-sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test;
+sudo add-apt-repository 'deb http://archive.ubuntu.com/ubuntu/ lunar main restricted universe multiverse';
 sudo apt update;
-sudo apt install -y gcc-11 g++-11 gdb
+sudo apt install -y gcc-11 g++-11 gdb;
+sudo update-alternatives --install /usr/bin/gcc gcc gcc-11 100
+sudo update-alternatives --install /usr/bin/g++ g++ g++-11 100
 ```
 
 ### Clang, clangd, clang-tidy and clang-format
 
-The following command will install the clang-15, to select a specific version replace the `15` with another version
+The following command will install the clang-15, Replace `15` to install another version
 
 ```bash
 sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)" -s 15 all;
@@ -144,7 +146,7 @@ code --install-extension zxh404.vscode-proto3
 
 ### Configure Project
 
-Create a `CMakeUserPresets.json` file with the content above
+Create a `CMakeUserPresets.json` file with the content below
 
 ```json
 {
@@ -258,7 +260,7 @@ Use one of the presets listed on `CMakeUserPresets.json` to configure and build 
 cmake --list-presets
 ```
 
-2. Use one of the presets listed
+2. Use one of the presets listed with suffix `_local`.
 
 ```bash
 cmake --preset=gcc-developer_local
