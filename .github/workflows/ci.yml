@@ -96,10 +96,13 @@ jobs:
           sudo update-alternatives --install /usr/bin/clang-format clang-format $(which clang-format-${{ matrix.llvm-version }}) 100 &&
             sudo update-alternatives --set clang-format $(which clang-format-${{ matrix.llvm-version }})
 
+      - name: Add latest ubuntu repository
+        run: |
+          sudo add-apt-repository 'deb http://archive.ubuntu.com/ubuntu/ lunar main restricted universe multiverse'
+
       - name: Install GCC
         if: matrix.compiler == 'gcc'
         run: |
-          sudo add-apt-repository 'deb http://archive.ubuntu.com/ubuntu/ lunar main restricted universe multiverse'
           sudo apt update
           DEBIAN_FRONTEND=noninteractive sudo apt install -y --no-install-recommends \
             gcc-${{ matrix.compiler-version }} g++-${{ matrix.compiler-version }}
@@ -120,7 +123,6 @@ jobs:
       # All heavy dependencies, take too much time to install with conan.
       - name: Install heavy dependencies
         run: |
-          sudo add-apt-repository 'deb http://archive.ubuntu.com/ubuntu/ lunar main restricted universe multiverse'
           sudo apt update
           DEBIAN_FRONTEND=noninteractive sudo apt install -y --no-install-recommends \
             libgrpc-dev/lunar libgrpc++-dev/lunar libprotobuf-dev/lunar protobuf-compiler/lunar \

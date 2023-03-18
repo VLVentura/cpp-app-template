@@ -22,7 +22,7 @@ target_link_libraries(
             project_warnings
     PRIVATE fmt::fmt
             spdlog::spdlog
-            absl::absl
+            absl::base
             protobuf::libprotobuf
             Threads::Threads
 )
