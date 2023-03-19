@@ -31,11 +31,11 @@ jobs:
           #   config: gcc-production
           #   build-type: Release
 
-          - compiler: gcc
-            compiler-version: 9
-            llvm-version: 15
-            config: gcc-developer
-            build-type: Debug
+          # - compiler: gcc
+          #   compiler-version: 9
+          #   llvm-version: 15
+          #   config: gcc-developer
+          #   build-type: Debug
 
           # - compiler: gcc
           #   compiler-version: 9
@@ -124,9 +124,10 @@ jobs:
       - name: Install heavy dependencies
         run: |
           sudo apt update
-          DEBIAN_FRONTEND=noninteractive sudo apt install -y --no-install-recommends \
-            libgrpc-dev/lunar libgrpc++-dev/lunar libprotobuf-dev/lunar protobuf-compiler/lunar \
-            protobuf-compiler-grpc/lunar libabsl-dev libboost1.81-dev
+          DEBIAN_FRONTEND=noninteractive sudo apt install -y \
+            libc6-dev libc6-dev-amd64 libc6-dev-amd64-cross libgrpc-dev/lunar libgrpc++-dev/lunar \
+            libprotobuf-dev/lunar protobuf-compiler/lunar protobuf-compiler-grpc/lunar libabsl-dev \
+            libboost1.81-all-dev 
 
       - name: Configure ccache
         run: |
@@ -135,8 +136,8 @@ jobs:
       - name: Configure conan
         run: |
           conan profile new default --detect
-          conan profile update settings.compiler=${{ matrix.compiler }} default
-          conan profile update settings.compiler.version=${{ matrix.compiler-version }} default
+          conan profile update settings.compiler=gcc default
+          conan profile update settings.compiler.version=9 default
           conan profile update settings.compiler.cppstd=17 default
           conan profile update settings.compiler.libcxx=libstdc++11 default
 
