@@ -124,16 +124,17 @@ jobs:
       - name: Install heavy dependencies
         run: |
           sudo apt update
-          DEBIAN_FRONTEND=noninteractive sudo apt install -y \
-            libc6-dev libc6-dev-amd64 libc6-dev-amd64-cross libgrpc-dev/lunar libgrpc++-dev/lunar \
+          DEBIAN_FRONTEND=noninteractive sudo apt install -y --no-install-recommends \
+            libc6-dev/lunar libc6/lunar libgrpc-dev/lunar libgrpc++-dev/lunar \
             libprotobuf-dev/lunar protobuf-compiler/lunar protobuf-compiler-grpc/lunar libabsl-dev \
-            libboost1.81-all-dev 
+            libboost1.81-dev \
 
       - name: Configure ccache
         run: |
           ccache --max-size=2G --set-config=compression=true --set-config=compression_level=5
 
       - name: Configure conan
+        if: steps.configure-cache.outputs.cache-hit != 'true'
         run: |
           conan profile new default --detect
           conan profile update settings.compiler=gcc default
@@ -147,6 +148,7 @@ jobs:
         with:
           path: |
             ~/.ccache
+            ~/.conan
           key: ubuntu-20.04-cache
 
       - name: Configure cmake
