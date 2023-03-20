@@ -18,7 +18,7 @@ env:
 jobs:
   Test:
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     strategy:
       max-parallel: 2
@@ -125,9 +125,8 @@ jobs:
         run: |
           sudo apt update
           DEBIAN_FRONTEND=noninteractive sudo apt install -y --no-install-recommends \
-            libc6-dev/lunar libc6/lunar libgrpc-dev/lunar libgrpc++-dev/lunar \
-            libprotobuf-dev/lunar protobuf-compiler/lunar protobuf-compiler-grpc/lunar libabsl-dev \
-            libboost1.81-dev \
+            libgrpc-dev/lunar libgrpc++-dev/lunar libprotobuf-dev/lunar protobuf-compiler/lunar \
+            protobuf-compiler-grpc/lunar libabsl-dev libboost1.81-dev \
 
       - name: Configure ccache
         run: |
