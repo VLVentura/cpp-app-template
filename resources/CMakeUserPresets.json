@@ -1,0 +1,101 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 16
+    },
+    "configurePresets": [
+        {
+            "name": "gcc-developer_local",
+            "inherits": "gcc-developer",
+            "displayName": "GCC - Local Developer Mode",
+            "description": "Setup for GCC with local dependencies",
+            "cacheVariables": {
+                "ENABLE_LOCAL_BUILD_MODE": {
+                    "type": "BOOL",
+                    "value": true
+                }
+            }
+        },
+        {
+            "name": "gcc-production_local",
+            "inherits": "gcc-production",
+            "displayName": "GCC - Local Production Mode",
+            "description": "Setup for GCC with local dependencies",
+            "cacheVariables": {
+                "ENABLE_LOCAL_BUILD_MODE": {
+                    "type": "BOOL",
+                    "value": true
+                }
+            }
+        },
+        {
+            "name": "clang-developer_local",
+            "inherits": "clang-developer",
+            "displayName": "Clang - Local Developer Mode",
+            "description": "Setup for Clang with local dependencies",
+            "cacheVariables": {
+                "ENABLE_LOCAL_BUILD_MODE": {
+                    "type": "BOOL",
+                    "value": true
+                }
+            }
+        },
+        {
+            "name": "clang-production_local",
+            "inherits": "clang-production",
+            "displayName": "Clang - Local Production Mode",
+            "description": "Setup for Clang with local dependencies",
+            "cacheVariables": {
+                "ENABLE_LOCAL_BUILD_MODE": {
+                    "type": "BOOL",
+                    "value": true
+                }
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "gcc-release",
+            "displayName": "GCC - Release build",
+            "description": "Build for production",
+            "configurePreset": "gcc-production_local",
+            "configuration": "Release",
+            "targets": "all",
+            "jobs": 12
+        },
+        {
+            "name": "gcc-debug",
+            "displayName": "GCC - Debug build",
+            "description": "Build for debug mode",
+            "configurePreset": "gcc-developer_local",
+            "configuration": "Debug",
+            "targets": [
+                "all",
+                "CodeCoverage"
+            ],
+            "jobs": 12
+        },
+        {
+            "name": "clang-release",
+            "displayName": "Clang - Release build",
+            "description": "Build for production",
+            "configurePreset": "clang-production_local",
+            "configuration": "Release",
+            "targets": "all",
+            "jobs": 12
+        },
+        {
+            "name": "clang-debug",
+            "displayName": "Clang - Debug build",
+            "description": "Build for debug mode",
+            "configurePreset": "clang-developer_local",
+            "configuration": "Debug",
+            "targets": [
+                "all",
+                "CodeCoverage"
+            ],
+            "jobs": 12
+        }
+    ]
+}

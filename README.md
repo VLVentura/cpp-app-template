@@ -84,6 +84,10 @@ The following command will install the clang-15, Replace `15` to install another
 sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)" -s 15 all;
 sudo apt update;
 sudo apt install -y clang-15 clangd-15 clang-format-15 clang-tidy-15 clang-tools-15
+sudo update-alternatives --install /usr/bin/clang clang $(which clang-15) 100 && sudo update-alternatives --set clang $(which clang-15)
+sudo update-alternatives --install /usr/bin/clang++ clang++ $(which clang++-15) 100 && sudo update-alternatives --set clang++ $(which clang++-15)
+sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy $(which clang-tidy-15) 100 && sudo update-alternatives --set clang-tidy $(which clang-tidy-15)
+sudo update-alternatives --install /usr/bin/clang-format clang-format $(which clang-format-15) 100 && sudo update-alternatives --set clang-format $(which clang-format-15)
 ```
 
 ### CMake
@@ -146,113 +150,8 @@ code --install-extension zxh404.vscode-proto3
 
 ### Configure Project
 
-Create a `CMakeUserPresets.json` file with the content below
-
-```json
-{
-    "version": 3,
-    "cmakeMinimumRequired": {
-        "major": 3,
-        "minor": 16
-    },
-    "configurePresets": [
-        {
-            "name": "gcc-developer_local",
-            "inherits": "gcc-developer",
-            "displayName": "GCC - Local Developer Mode",
-            "description": "Setup for GCC with local dependencies",
-            "cacheVariables": {
-                "ENABLE_LOCAL_BUILD_MODE": {
-                    "type": "BOOL",
-                    "value": true
-                }
-            }
-        },
-        {
-            "name": "gcc-production_local",
-            "inherits": "gcc-production",
-            "displayName": "GCC - Local Production Mode",
-            "description": "Setup for GCC with local dependencies",
-            "cacheVariables": {
-                "ENABLE_LOCAL_BUILD_MODE": {
-                    "type": "BOOL",
-                    "value": true
-                }
-            }
-        },
-        {
-            "name": "clang-developer_local",
-            "inherits": "clang-developer",
-            "displayName": "Clang - Local Developer Mode",
-            "description": "Setup for Clang with local dependencies",
-            "cacheVariables": {
-                "ENABLE_LOCAL_BUILD_MODE": {
-                    "type": "BOOL",
-                    "value": true
-                }
-            }
-        },
-        {
-            "name": "clang-production_local",
-            "inherits": "clang-production",
-            "displayName": "Clang - Local Production Mode",
-            "description": "Setup for Clang with local dependencies",
-            "cacheVariables": {
-                "ENABLE_LOCAL_BUILD_MODE": {
-                    "type": "BOOL",
-                    "value": true
-                }
-            }
-        }
-    ],
-    "buildPresets": [
-        {
-            "name": "gcc-release",
-            "displayName": "GCC - Release build",
-            "description": "Build for production",
-            "configurePreset": "gcc-production_local",
-            "configuration": "Release",
-            "targets": "all",
-            "jobs": 12
-        },
-        {
-            "name": "gcc-debug",
-            "displayName": "GCC - Debug build",
-            "description": "Build for debug mode",
-            "configurePreset": "gcc-developer_local",
-            "configuration": "Debug",
-            "targets": [
-                "all",
-                "CodeCoverage"
-            ],
-            "jobs": 12
-        },
-        {
-            "name": "clang-release",
-            "displayName": "Clang - Release build",
-            "description": "Build for production",
-            "configurePreset": "clang-production_local",
-            "configuration": "Release",
-            "targets": "all",
-            "jobs": 12
-        },
-        {
-            "name": "clang-debug",
-            "displayName": "Clang - Debug build",
-            "description": "Build for debug mode",
-            "configurePreset": "clang-developer_local",
-            "configuration": "Debug",
-            "targets": [
-                "all",
-                "CodeCoverage"
-            ],
-            "jobs": 12
-        }
-    ]
-}
-```
-
-Use one of the presets listed on `CMakeUserPresets.json` to configure and build project.
+Copy the `CMakeUserPresets.json` file from resources directory to the root directory and use one of the presets 
+listed on the file to configure and build project.
 
 1. List the presets:
 
