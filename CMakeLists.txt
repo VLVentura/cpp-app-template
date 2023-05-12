@@ -59,12 +59,6 @@ set(THIRD_PARTY_PATH ${CMAKE_SOURCE_DIR}/third_party)
 include(${CMAKE_UTILITIES_DIRECTORY}/ThirdParty.cmake)
 add_third_parties()
 
-# Format code
-if (${ENABLE_DEVELOPER_MODE})
-    include(${CMAKE_UTILITIES_DIRECTORY}/FormatCode.cmake)
-    format_code()
-endif()
-
 # Adding the src:
 include_directories(src)
 add_subdirectory(src)
@@ -73,8 +67,18 @@ add_subdirectory(src)
 option(ENABLE_TESTING "Enable the tests" ON)
 if(ENABLE_TESTING)
     enable_testing()
-    include(${CMAKE_UTILITIES_DIRECTORY}/ExtraCmakeModules.cmake)
-    download_additional_cmake_modules()
+
+    include(${_project_options_SOURCE_DIR}/src/VCEnvironment.cmake)
+    # If compiler is MSVC this flag will be ON and in this case we should not use gcovr tool.
+    set(USE_GCOVR_TOOL OFF)
+    is_msvc(${USE_GCOVR_TOOL})
+
+    if(NOT ${USE_GCOVR_TOOL})
+        message(STATUS "Using gcovr to generate code coverage report.")
+
+        include(${CMAKE_UTILITIES_DIRECTORY}/ExtraCmakeModules.cmake)
+        download_additional_cmake_modules()
+    endif()
 
     message(STATUS "Building Tests.")
     add_subdirectory(tests)

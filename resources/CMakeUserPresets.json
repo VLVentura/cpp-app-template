@@ -72,6 +72,7 @@
             "configuration": "Debug",
             "targets": [
                 "all",
+                "main",
                 "CodeCoverage"
             ],
             "jobs": 12
@@ -93,6 +94,7 @@
             "configuration": "Debug",
             "targets": [
                 "all",
+                "main",
                 "CodeCoverage"
             ],
             "jobs": 12
