@@ -68,17 +68,8 @@ option(ENABLE_TESTING "Enable the tests" ON)
 if(ENABLE_TESTING)
     enable_testing()
 
-    include(${_project_options_SOURCE_DIR}/src/VCEnvironment.cmake)
-    # If compiler is MSVC this flag will be ON and in this case we should not use gcovr tool.
-    set(USE_GCOVR_TOOL OFF)
-    is_msvc(${USE_GCOVR_TOOL})
-
-    if(NOT ${USE_GCOVR_TOOL})
-        message(STATUS "Using gcovr to generate code coverage report.")
-
-        include(${CMAKE_UTILITIES_DIRECTORY}/ExtraCmakeModules.cmake)
-        download_additional_cmake_modules()
-    endif()
+    include(${CMAKE_UTILITIES_DIRECTORY}/ExtraCmakeModules.cmake)
+    download_additional_cmake_modules()
 
     message(STATUS "Building Tests.")
     add_subdirectory(tests)
