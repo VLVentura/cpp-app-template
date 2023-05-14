@@ -10,7 +10,7 @@ Template repository for applications written in C++
   - [Configuring Dependencies on Ubuntu](#configuring-dependencies-on-ubuntu)
     - [Dependencies installed with apt](#dependencies-installed-with-apt)
     - [GCC](#gcc)
-    - [Clang, clangd, clang-tidy and clang-format](#clang-clangd-clang-tidy-and-clang-format)
+    - [Clang, clangd, clang-tidy, clang-format and llvm-cov](#clang-clangd-clang-tidy-clang-format-and-llvm-cov)
     - [CMake](#cmake)
     - [Pip](#pip)
     - [Conan](#conan)
@@ -76,18 +76,19 @@ sudo update-alternatives --install /usr/bin/gcc gcc gcc-11 100
 sudo update-alternatives --install /usr/bin/g++ g++ g++-11 100
 ```
 
-### Clang, clangd, clang-tidy and clang-format
+### Clang, clangd, clang-tidy, clang-format and llvm-cov
 
 The following command will install the clang-15, Replace `15` to install another version
 
 ```bash
 sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)" -s 15 all;
 sudo apt update;
-sudo apt install -y clang-15 clangd-15 clang-format-15 clang-tidy-15 clang-tools-15
+sudo apt install -y clang-15 clangd-15 clang-format-15 clang-tidy-15 clang-tools-15 llvm-cov-15
 sudo update-alternatives --install /usr/bin/clang clang $(which clang-15) 100 && sudo update-alternatives --set clang $(which clang-15)
 sudo update-alternatives --install /usr/bin/clang++ clang++ $(which clang++-15) 100 && sudo update-alternatives --set clang++ $(which clang++-15)
 sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy $(which clang-tidy-15) 100 && sudo update-alternatives --set clang-tidy $(which clang-tidy-15)
 sudo update-alternatives --install /usr/bin/clang-format clang-format $(which clang-format-15) 100 && sudo update-alternatives --set clang-format $(which clang-format-15)
+sudo update-alternatives --install /usr/bin/llvm-cov-15 llvm-cov $(which llvm-cov-15) 100 && sudo update-alternatives --set llvm-cov $(which llvm-cov-15)
 ```
 
 ### CMake
