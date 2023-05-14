@@ -12,7 +12,8 @@ function(install_conan_packages)
   execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${CONAN_DIRECTORY})
   execute_process(
     COMMAND 
-    conan install ${CMAKE_CURRENT_SOURCE_DIR}/${CONAN_FILE} --install-folder ${CONAN_DIRECTORY} --build=missing --profile:build default)
+    conan install ${CMAKE_CURRENT_SOURCE_DIR}/${CONAN_FILE} --install-folder ${CONAN_DIRECTORY} --build=missing --profile:build default -s build_type=${CMAKE_BUILD_TYPE}
+  )
 endfunction()
 
 macro(setup_conan)
