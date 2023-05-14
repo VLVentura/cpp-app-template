@@ -145,6 +145,7 @@ code --install-extension wayou.vscode-todo-highlight;
 code --install-extension xaver.clang-format;
 code --install-extension yzhang.markdown-all-in-one;
 code --install-extension zxh404.vscode-proto3
+code --install-extension franneck94.c-cpp-runner
 ```
 
 ## Configure and Build Process
