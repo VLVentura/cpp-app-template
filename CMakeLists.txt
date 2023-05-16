@@ -10,36 +10,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_EXTENSIONS ON)
 
-# Both developer and user mode
-set(ENABLE_CACHE_DEFAULT ON)
-set(ENABLE_CONAN_DEFAULT OFF)
-
-# Developer mode
-option(ENABLE_DEVELOPER_MODE "Enable 'developer mode'" TRUE)
-option(ENABLE_LOCAL_BUILD_MODE "Enable 'local build mode'" TRUE)
-
-set(ENABLE_COVERAGE_DEVELOPER_DEFAULT ON)
-set(CMAKE_UTILITIES_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/cmake)
-
-if(${ENABLE_DEVELOPER_MODE})
-    set(CMAKE_BUILD_TYPE Debug)
-else()
-    set(CMAKE_BUILD_TYPE Release)
-endif()
-
-# Sanitizers
-set(ENABLE_SANITIZER_LEAK_DEVELOPER_DEFAULT ON)
-set(ENABLE_SANITIZER_MEMORY_DEVELOPER_DEFAULT ON)
-set(ENABLE_SANITIZER_THREAD_DEVELOPER_DEFAULT OFF)
-
 # Set output directories from targets
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/out/$<CONFIG>/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/out/$<CONFIG>/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/out/$<CONFIG>/bin)
-
-# Download aminya project options
-include(${CMAKE_UTILITIES_DIRECTORY}/DownloadProjectOptions.cmake)
-download_project_options()
 
 project(
     TemplateProject
@@ -48,22 +22,44 @@ project(
     LANGUAGES C CXX
 )
 
-include(${_project_options_SOURCE_DIR}/src/DynamicProjectOptions.cmake)
-dynamic_project_options(
-    CPPCHECK_OPTIONS
-    -i${PROJECT_SOURCE_DIR}/build/
-)
-
-target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
+# Setup project configurations
+include(cmake/ProjectOptions.cmake)
+setup_options()
+global_options()
+local_options()
 
 # Conan setup
+option(ENABLE_LOCAL_BUILD_MODE "Enable 'local build mode'" ON)
+
+set(CONAN_CMAKE_SILENT_OUTPUT TRUE)
 set(CONAN_DIRECTORY ${CMAKE_BINARY_DIR}/conan/)
-include(${CMAKE_UTILITIES_DIRECTORY}/Packages.cmake)
-setup_conan()
+
+if (ENABLE_LOCAL_BUILD_MODE)
+    message(STATUS "Local build mode is ON, to disable it use `-DENABLE_LOCAL_BUILD_MODE:BOOL=OFF`.")
+    set (CONAN_FILE conanfile.local.txt)
+else()
+    message(STATUS "Local build mode is OFF, to enable it use `-DENABLE_LOCAL_BUILD_MODE:BOOL=ON`.")
+    set (CONAN_FILE conanfile.txt)
+endif()
+
+include(cmake/conan.cmake)
+conan_cmake_install(
+    PATH_OR_REFERENCE 
+        ${CMAKE_SOURCE_DIR}/${CONAN_FILE}
+    INSTALL_FOLDER 
+        ${CONAN_DIRECTORY}
+    BUILD 
+        missing
+    PROFILE_BUILD 
+        default
+    SETTINGS_HOST
+        build_type=${CMAKE_BUILD_TYPE}
+)
+list(APPEND CMAKE_MODULE_PATH ${CONAN_DIRECTORY})
 
 # Adding third_party that is not in conan center or it is an inside project
 set(THIRD_PARTY_PATH ${CMAKE_SOURCE_DIR}/third_party)
-include(${CMAKE_UTILITIES_DIRECTORY}/ThirdParty.cmake)
+include(cmake/ThirdParty.cmake)
 add_third_parties()
 
 # Adding the src:
@@ -74,10 +70,6 @@ add_subdirectory(src)
 option(ENABLE_TESTING "Enable the tests" ON)
 if(ENABLE_TESTING)
     enable_testing()
-
-    include(${CMAKE_UTILITIES_DIRECTORY}/ExtraCmakeModules.cmake)
-    download_additional_cmake_modules()
-
     message(STATUS "Building Tests.")
     add_subdirectory(tests)
 endif()

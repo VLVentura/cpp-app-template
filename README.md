@@ -161,10 +161,10 @@ listed on the file to configure and build project.
 cmake --list-presets
 ```
 
-2. Use one of the presets listed with suffix `_local`.
+1. Use one of the presets listed
 
 ```bash
-cmake --preset=gcc-developer_local
+cmake --preset=gcc-developer
 ```
 
 ### Build Project

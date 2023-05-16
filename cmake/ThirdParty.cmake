@@ -1,12 +1,12 @@
 include_guard()
 
+include(cmake/StaticAnalyzers.cmake)
+include(cmake/Utilities.cmake)
+
 macro(add_third_parties)
     foreach(third_party ${ARGN})
         add_subdirectory(${THIRD_PARTY_PATH}/${third_party})
     endforeach()
-
-    include(${_project_options_SOURCE_DIR}/src/StaticAnalyzers.cmake)
-    include(${_project_options_SOURCE_DIR}/src/Utilities.cmake)
 
     get_all_targets(TARGETS)
     foreach(target ${TARGETS})

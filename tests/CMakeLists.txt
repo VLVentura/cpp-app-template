@@ -2,9 +2,8 @@ find_package(GTest)
 include(GoogleTest)
 include(Dart)
 
-include(${CMAKE_UTILITIES_DIRECTORY}/Tests.cmake)
-include(${CMAKE_UTILITIES_DIRECTORY}/ExtraCmakeModules.cmake)
-include_cmake_module(CodeCoverage)
+include(${CMAKE_SOURCE_DIR}/cmake/Tests.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/CodeCoverage.cmake)
 
 set(ALL_TESTS)
 set(GCOVR_ADDITIONAL_ARGS --delete --print-summary)
