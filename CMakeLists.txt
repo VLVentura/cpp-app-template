@@ -29,18 +29,12 @@ global_options()
 local_options()
 
 # Conan setup
-option(ENABLE_LOCAL_BUILD_MODE "Enable 'local build mode'" ON)
-
 set(CONAN_CMAKE_SILENT_OUTPUT TRUE)
+
+set(CONAN_FILE "conanfile.txt" CACHE STRING "Conanfile to search for packages")
 set(CONAN_DIRECTORY ${CMAKE_BINARY_DIR}/conan/)
 
-if (ENABLE_LOCAL_BUILD_MODE)
-    message(STATUS "Local build mode is ON, to disable it use `-DENABLE_LOCAL_BUILD_MODE:BOOL=OFF`.")
-    set (CONAN_FILE conanfile.local.txt)
-else()
-    message(STATUS "Local build mode is OFF, to enable it use `-DENABLE_LOCAL_BUILD_MODE:BOOL=ON`.")
-    set (CONAN_FILE conanfile.txt)
-endif()
+message(STATUS "Conanfile: ${CONAN_FILE}")
 
 include(cmake/conan.cmake)
 conan_cmake_install(

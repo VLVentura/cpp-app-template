@@ -4,12 +4,32 @@
         "major": 3,
         "minor": 16
     },
+    "configurePresets": [
+        {
+            "name": "gcc-local-conanfile",
+            "inherits": "gcc-debug",
+            "displayName": "GCC - Debug with conanfile.local.txt",
+            "description": "Setup for GCC with Local Conanfile",
+            "cacheVariables": {
+                "CONAN_FILE": "conanfile.local.txt"
+            }
+        },
+        {
+            "name": "clang-local-conanfile",
+            "inherits": "clang-debug",
+            "displayName": "Clang - Debug with conanfile.local.txt",
+            "description": "Setup for Clang with Local Conanfile",
+            "cacheVariables": {
+                "CONAN_FILE": "conanfile.local.txt"
+            }
+        }
+    ],
     "buildPresets": [
         {
-            "name": "gcc-release",
-            "displayName": "GCC - Release build",
+            "name": "gcc-release-build",
+            "displayName": "GCC - Release Build",
             "description": "Build for production",
-            "configurePreset": "gcc-default",
+            "configurePreset": "gcc-release",
             "configuration": "Release",
             "targets": [
                 "all",
@@ -19,10 +39,10 @@
             "jobs": 14
         },
         {
-            "name": "gcc-debug",
-            "displayName": "GCC - Debug build",
+            "name": "gcc-debug-build",
+            "displayName": "GCC - Debug Build",
             "description": "Build for debug mode",
-            "configurePreset": "gcc-developer",
+            "configurePreset": "gcc-debug",
             "configuration": "Debug",
             "targets": [
                 "all",
@@ -32,10 +52,23 @@
             "jobs": 14
         },
         {
-            "name": "clang-release",
+            "name": "gcc-debug-local-build",
+            "displayName": "GCC - Debug Local Build",
+            "description": "Build for debug mode with conanfile.local.txt",
+            "configurePreset": "gcc-local-conanfile",
+            "configuration": "Debug",
+            "targets": [
+                "all",
+                "main",
+                "CodeCoverage"
+            ],
+            "jobs": 14
+        },
+        {
+            "name": "clang-release-build",
             "displayName": "Clang - Release build",
             "description": "Build for production",
-            "configurePreset": "clang-production",
+            "configurePreset": "clang-release",
             "configuration": "Release",
             "targets": [
                 "all",
@@ -45,10 +78,10 @@
             "jobs": 14
         },
         {
-            "name": "clang-debug",
+            "name": "clang-debug-build",
             "displayName": "Clang - Debug build",
             "description": "Build for debug mode",
-            "configurePreset": "clang-developer",
+            "configurePreset": "clang-debug",
             "configuration": "Debug",
             "targets": [
                 "all",
@@ -56,6 +89,35 @@
                 "CodeCoverage"
             ],
             "jobs": 14
+        },
+        {
+            "name": "clang-debug-local-build",
+            "displayName": "Clang - Debug Local Build",
+            "description": "Build for debug mode with conanfile.local.txt",
+            "configurePreset": "clang-local-conanfile",
+            "configuration": "Debug",
+            "targets": [
+                "all",
+                "main",
+                "CodeCoverage"
+            ],
+            "jobs": 14
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "test-gcc-debug-local",
+            "displayName": "Test GCC - Debug with conanfile.local.txt",
+            "description": "Test with GCC Debug Configuration",
+            "inherits": "test-default",
+            "configurePreset": "gcc-local-conanfile"
+        },
+        {
+            "name": "test-clang-debug-local",
+            "displayName": "Test Clang - Debug with conanfile.local.txt",
+            "description": "Test with Clang Debug Configuration",
+            "inherits": "test-default",
+            "configurePreset": "clang-local-conanfile"
         }
     ]
 }

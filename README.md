@@ -8,13 +8,6 @@ Template repository for applications written in C++
 - [Table of Contents](#table-of-contents)
 - [Setting up the Development Environment](#setting-up-the-development-environment)
   - [Configuring Dependencies on Ubuntu](#configuring-dependencies-on-ubuntu)
-    - [Dependencies installed with apt](#dependencies-installed-with-apt)
-    - [GCC](#gcc)
-    - [Clang, clangd, clang-tidy, clang-format and llvm-cov](#clang-clangd-clang-tidy-clang-format-and-llvm-cov)
-    - [CMake](#cmake)
-    - [Pip](#pip)
-    - [Conan](#conan)
-    - [VSCode Extensions that will help with code productivity](#vscode-extensions-that-will-help-with-code-productivity)
   - [Configure and Build Process](#configure-and-build-process)
     - [Configure Project](#configure-project)
     - [Build Project](#build-project)
@@ -51,101 +44,26 @@ In order to set up the development environment for a C++ project, some dependenc
 
 ## Configuring Dependencies on Ubuntu
 
-### Dependencies installed with apt
-
-Use the following command to update the system and install the packages:
+On tools directory, run the script `install_dependencies.sh` with sudo privileges.
+This script will install all the dependencies and the latest version of GCC available on your distribution and Clang-15 by default.
 
 ```bash
-sudo apt update;
-sudo apt upgrade -y;
-sudo apt install -y software-properties-common build-essential autoconf libtool pkg-config \
-     wget tar git \
-     ccache ninja-build cppcheck gcovr \
-     python3 python3-pip
+cd tools ;
+sudo ./install_dependencies
 ```
 
-### GCC
-
-The following command will install the gcc-11. Replace `11` to install another version
+You can also specify a version of gcc to install and/or a version of clang. Just keep in mind that maybe not all GCC's versions are available on your distribution. On Ubuntu 20.04 LTS, for example, the latest GCC available is GCC-10.
 
 ```bash
-sudo add-apt-repository 'deb http://archive.ubuntu.com/ubuntu/ lunar main restricted universe multiverse';
-sudo apt update;
-sudo apt install -y gcc-11 g++-11 gdb;
-sudo update-alternatives --install /usr/bin/gcc gcc gcc-11 100
-sudo update-alternatives --install /usr/bin/g++ g++ g++-11 100
+cd tools ;
+sudo ./install_dependencies --gcc 10 --clang 15
 ```
 
-### Clang, clangd, clang-tidy, clang-format and llvm-cov
-
-The following command will install the clang-15, Replace `15` to install another version
+If you don't want to install a newer GCC, you can pass -1 to it, and it will skip the GCC installation. Clang is required, you cannot skip clang installation.
 
 ```bash
-sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)" -s 15 all;
-sudo apt update;
-sudo apt install -y clang-15 clangd-15 clang-format-15 clang-tidy-15 clang-tools-15 llvm-cov-15
-sudo update-alternatives --install /usr/bin/clang clang $(which clang-15) 100 && sudo update-alternatives --set clang $(which clang-15)
-sudo update-alternatives --install /usr/bin/clang++ clang++ $(which clang++-15) 100 && sudo update-alternatives --set clang++ $(which clang++-15)
-sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy $(which clang-tidy-15) 100 && sudo update-alternatives --set clang-tidy $(which clang-tidy-15)
-sudo update-alternatives --install /usr/bin/clang-format clang-format $(which clang-format-15) 100 && sudo update-alternatives --set clang-format $(which clang-format-15)
-sudo update-alternatives --install /usr/bin/llvm-cov-15 llvm-cov $(which llvm-cov-15) 100 && sudo update-alternatives --set llvm-cov $(which llvm-cov-15)
-```
-
-### CMake
-
-This is a cross-platform build system used to generate build files for various platforms and compilers.
-
-```bash
-sudo bash -c "$(wget -O - https://apt.kitware.com/kitware-archive.sh)";
-sudo apt update;
-sudo apt install cmake cmake-curses-gui
-```
-
-### Pip
-
-Update pip to the latest version
-
-```bash
-python3 -m pip install --upgrade pip setuptools
-```
-
-### Conan
-
-This is a package manager for C/C++ that simplifies dependency management.
-Install and configure with the commands above:
-
-```bash
-pip install conan==1.56;
-conan profile new default --detect;
-conan profile update settings.compiler=gcc default;
-conan profile update settings.compiler.version=9 default;
-conan profile update settings.compiler.cppstd=17 default;
-conan profile update settings.compiler.libcxx=libstdc++11 default;
-echo "tools.system.package_manager:mode = install\ntools.system.package_manager:sudo = True" >> ~/.conan/global.conf
-```
-
-### VSCode Extensions that will help with code productivity
-
-Assuming that you already has vscode installed
-
-```bash
-code --install-extension akiramiyakoda.cppincludeguard;
-code --install-extension eamodio.gitlens;
-code --install-extension Gruntfuggly.todo-tree;
-code --install-extension hars.CppSnippets;
-code --install-extension IBM.output-colorizer;
-code --install-extension jeff-hykin.better-cpp-syntax;
-code --install-extension llvm-vs-code-extensions.vscode-clangd;
-code --install-extension ms-azuretools.vscode-docker;
-code --install-extension ms-vscode.cmake-tools;
-code --install-extension streetsidesoftware.code-spell-checker;
-code --install-extension tdennis4496.cmantic;
-code --install-extension twxs.cmake;
-code --install-extension wayou.vscode-todo-highlight;
-code --install-extension xaver.clang-format;
-code --install-extension yzhang.markdown-all-in-one;
-code --install-extension zxh404.vscode-proto3
-code --install-extension franneck94.c-cpp-runner
+cd tools ;
+sudo ./install_dependencies --gcc -1
 ```
 
 ## Configure and Build Process

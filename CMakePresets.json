@@ -6,40 +6,31 @@
     },
     "configurePresets": [
         {
-            "name": "gcc-default",
-            "hidden": true,
-            "displayName": "GCC - Default",
-            "description": "Setup for GCC",
+            "name": "gcc-release",
+            "displayName": "GCC - Release",
+            "description": "Setup for GCC as Release Build",
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "gcc",
                 "CMAKE_CXX_COMPILER": "g++",
-                "CMAKE_BUILD_TYPE": "Release",
-                "ENABLE_LOCAL_BUILD_MODE": {
-                    "type": "BOOL",
-                    "value": false
-                }
+                "CMAKE_BUILD_TYPE": "Release"
             }
         },
         {
-            "name": "gcc-developer",
-            "inherits": "gcc-default",
-            "displayName": "GCC - Developer Mode",
-            "description": "Setup for GCC with developer mode enabled",
+            "name": "gcc-debug",
+            "inherits": "gcc-release",
+            "displayName": "GCC - Debug",
+            "description": "Setup for GCC as Debug Build",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "ENABLE_LOCAL_BUILD_MODE": {
-                    "type": "BOOL",
-                    "value": true
-                }
+                "CMAKE_BUILD_TYPE": "Debug"
             }
         },
         {
-            "name": "gcc-developer_with_thread_sanitizer",
-            "inherits": "gcc-developer",
-            "displayName": "GCC - Developer Mode with Thread Sanitizer",
-            "description": "Setup for GCC with with developer mode and thread sanitizer enabled",
+            "name": "gcc-debug_with_thread_sanitizer",
+            "inherits": "gcc-debug",
+            "displayName": "GCC - Debug with Thread Sanitizer",
+            "description": "Setup for GCC as Debug Build and Thread Sanitizer Enabled",
             "cacheVariables": {
                 "ENABLE_SANITIZER_THREAD": {
                     "type": "BOOL",
@@ -56,33 +47,25 @@
             }
         },
         {
-            "name": "clang-default",
+            "name": "clang-release",
             "hidden": true,
-            "displayName": "Clang - Default",
-            "description": "Setup for Clang",
+            "displayName": "Clang - Release",
+            "description": "Setup for Clang as Release Build",
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "clang",
                 "CMAKE_CXX_COMPILER": "clang++",
-                "CMAKE_BUILD_TYPE": "Release",
-                "ENABLE_LOCAL_BUILD_MODE": {
-                    "type": "BOOL",
-                    "value": false
-                }
+                "CMAKE_BUILD_TYPE": "Release"
             }
         },
         {
-            "name": "clang-developer",
-            "inherits": "clang-default",
-            "displayName": "Clang - Developer Mode",
-            "description": "Setup for Clang with developer mode enabled",
+            "name": "clang-debug",
+            "inherits": "clang-release",
+            "displayName": "Clang - Debug",
+            "description": "Setup for Clang as Debug Build",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
-                "ENABLE_LOCAL_BUILD_MODE": {
-                    "type": "BOOL",
-                    "value": true
-                },
                 "ENABLE_SANITIZER_MEMORY": {
                     "type": "BOOL",
                     "value": false
@@ -90,16 +73,12 @@
             }
         },
         {
-            "name": "clang-developer_with_memory_sanitizer",
-            "inherits": "clang-default",
-            "displayName": "Clang - Developer Mode with Memory Sanitizer",
-            "description": "Setup for Clang with developer mode and memory sanitizer enabled",
+            "name": "clang-debug_with_memory_sanitizer",
+            "inherits": "clang-release",
+            "displayName": "Clang - Debug with Memory Sanitizer",
+            "description": "Setup for Clang as Debug Build and Memory Sanitizer Enabled",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
-                "ENABLE_LOCAL_BUILD_MODE": {
-                    "type": "BOOL",
-                    "value": true
-                },
                 "ENABLE_SANITIZER_ADDRESS": {
                     "type": "BOOL",
                     "value": false
@@ -111,10 +90,10 @@
             }
         },
         {
-            "name": "clang-developer_with_thread_sanitizer",
-            "inherits": "clang-developer_with_memory_sanitizer",
-            "displayName": "Clang - Developer Mode with Thread Sanitizer",
-            "description": "Setup for Clang with developer mode and thread sanitizer enabled",
+            "name": "clang-debug_with_thread_sanitizer",
+            "inherits": "clang-debug_with_memory_sanitizer",
+            "displayName": "Clang - Debug with Thread Sanitizer",
+            "description": "Setup for Clang as Debug Build and Thread Sanitizer Enabled",
             "cacheVariables": {
                 "ENABLE_SANITIZER_THREAD": {
                     "type": "BOOL",
@@ -146,14 +125,14 @@
             "displayName": "Test GCC - Debug",
             "description": "Test with GCC Debug Configuration",
             "inherits": "test-default",
-            "configurePreset": "gcc-developer"
+            "configurePreset": "gcc-debug"
         },
         {
             "name": "test-clang-developer",
             "displayName": "Test Clang - Debug",
             "description": "Test with Clang Debug Configuration",
             "inherits": "test-default",
-            "configurePreset": "clang-developer"
+            "configurePreset": "clang-debug"
         }
     ]
 }
