@@ -12,4 +12,5 @@ gtest/1.12.1
 
 
 [generators]
+visual_studio
 cmake_find_package

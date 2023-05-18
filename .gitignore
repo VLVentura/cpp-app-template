@@ -190,6 +190,12 @@ fabric.properties
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 
+### VisualStudio ###
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.*
+
 # Local History for Visual Studio Code
 .history/
 
