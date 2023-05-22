@@ -2,61 +2,6 @@ workspace "CppAppTemplate"
     configurations { "Debug", "Release" }
     platforms { "x32", "x64" }
 
-project "CppAppTemplate"
-    kind "ConsoleApp"
-    language "C++"
-    cdialect "C11"
-    cppdialect "C++17"
-
-    targetdir "%{prj.path}/build/%{cfg.buildcfg}/%{cfg.platform}"
-    objdir "%{prj.path}/build/%{cfg.buildcfg}/%{cfg.platform}/obj"
-
-    excludes "cmake/"
-    excludes ".vscode/"
-
-    includedirs {
-		"%{prj.path}/src",
-        "%{prj.path}/tests",
-
-        -- Add third_party directories
-        -- "%{prj.path}/third_party/<some_project>"
-
-        -- Not source code or third_party dependencies
-        "%{prj.path}/resources",
-        "%{prj.path}/.devcontainer",
-        "%{prj.path}/.github",
-    }
-
-    files { 
-        "%{prj.path}/src/**.h", 
-		"%{prj.path}/src/**.c", 
-		"%{prj.path}/src/**.hpp", 
-		"%{prj.path}/src/**.cpp",
-
-        -- Test files
-        "%{prj.path}/tests/**.h", 
-		"%{prj.path}/tests/**.c", 
-		"%{prj.path}/tests/**.hpp", 
-		"%{prj.path}/tests/**.cpp",
-        
-        -- Not source code files
-        "%{prj.path}/conanfile.txt",
-        "%{prj.path}/premake5.lua",
-        "%{prj.path}/.clang-format",
-        "%{prj.path}/.clang-tidy",
-        "%{prj.path}/.dockerignore",
-        "%{prj.path}/.gitignore",
-        "%{prj.path}/resources/*",
-        "%{prj.path}/.devcontainer/*",
-        "%{prj.path}/.github/*",
-    }
-
-    removefiles {
-        "**/CMakeLists.txt",
-        "%{prj.path}/CMakePresets.json",
-        "%{prj.path}/conanfile.local.txt",
-    }
-
     local globalDebugOptions = {
         -- Warnings
         "/WX",                  -- Treats all compiler warnings as errors 
@@ -95,6 +40,7 @@ project "CppAppTemplate"
     }
 
     filter "configurations:Debug"
+        debugdir "%{prj.path}/build/%{cfg.buildcfg}/%{cfg.platform}"
         defines { "DEBUG" }
         symbols "On"
 
@@ -131,3 +77,81 @@ project "CppAppTemplate"
             -- Extra Linker options
             "/LTCG",        -- Link-time code generation: https://learn.microsoft.com/en-us/cpp/build/reference/ltcg-link-time-code-generation?view=msvc-170
         }
+
+project "AppTemplate"
+    kind "ConsoleApp"
+    language "C++"
+    cdialect "C11"
+    cppdialect "C++17"
+
+    targetdir "%{prj.path}/build/%{cfg.buildcfg}/%{cfg.platform}"
+    objdir "%{prj.path}/build/%{cfg.buildcfg}/%{cfg.platform}/obj"
+
+    includedirs {
+		"%{prj.path}/src",
+        "%{prj.path}/tests",
+
+        -- Add third_party directories
+        -- "%{prj.path}/third_party/<some_project>"
+
+        -- Not source code or third_party dependencies
+        "%{prj.path}/resources",
+        "%{prj.path}/.devcontainer",
+        "%{prj.path}/.github",
+    }
+
+    files { 
+        "%{prj.path}/src/**.h", 
+		"%{prj.path}/src/**.c", 
+		"%{prj.path}/src/**.hpp", 
+		"%{prj.path}/src/**.cpp",
+        
+        -- Not source code files
+        "%{prj.path}/conanfile.txt",
+        "%{prj.path}/premake5.lua",
+        "%{prj.path}/gen.ps1",
+        "%{prj.path}/.clang-format",
+        "%{prj.path}/.clang-tidy",
+        "%{prj.path}/.dockerignore",
+        "%{prj.path}/.gitignore",
+        "%{prj.path}/resources/**",
+        "%{prj.path}/.devcontainer/**",
+        "%{prj.path}/.github/**",
+    }
+
+project "Tests"
+    kind "ConsoleApp"
+    language "C++"
+    cdialect "C11"
+    cppdialect "C++17"
+
+    targetdir "%{prj.path}/build/%{cfg.buildcfg}/%{cfg.platform}"
+    objdir "%{prj.path}/build/%{cfg.buildcfg}/%{cfg.platform}/obj"
+
+    includedirs {
+		"%{prj.path}/src",
+
+        -- Add third_party directories
+        -- "%{prj.path}/third_party/<some_project>"
+
+        -- Not source code or third_party dependencies
+        "%{prj.path}/resources",
+    }
+
+    removefiles {
+        "%{prj.path}/src/main.cpp",
+    }
+
+    files {
+        -- Test files
+        "%{prj.path}/tests/**.h", 
+		"%{prj.path}/tests/**.c", 
+		"%{prj.path}/tests/**.hpp", 
+		"%{prj.path}/tests/**.cpp",
+
+        -- Source code files
+        "%{prj.path}/src/**/**.h", 
+		"%{prj.path}/src/**/**.c", 
+		"%{prj.path}/src/**/**.hpp", 
+		"%{prj.path}/src/**/**.cpp",
+    }
