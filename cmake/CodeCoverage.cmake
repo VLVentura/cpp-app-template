@@ -151,6 +151,15 @@ if(NOT GCOV_PATH)
     message(FATAL_ERROR "gcov not found! Aborting...")
 endif() # NOT GCOV_PATH
 
+set(GCOV_EXECUTABLE gcov)
+if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+    find_program(LLVM_COV_PATH llvm-cov)
+    if(NOT GCOV_PATH)
+        message(FATAL_ERROR "llvm-cov not found! Aborting...")
+    endif()
+    set(GCOV_EXECUTABLE "${LLVM_COV_PATH} gcov")
+endif()
+
 # Check supported compiler (Clang, GNU and Flang)
 get_property(LANGUAGES GLOBAL PROPERTY ENABLED_LANGUAGES)
 foreach(LANG ${LANGUAGES})
